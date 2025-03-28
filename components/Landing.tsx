@@ -1,15 +1,21 @@
 import { SearchBar } from "@/components/landing/search-bar";
 import { TrendingSection } from "@/components/landing/trending-section";
-import { QuickLinks } from "@/components/landing/quick-links";
 import { Greeting } from "./Greetings";
 import TypewriterEffect from "./landing/typewriter-effect";
 import { getServerSession } from "next-auth";
+import { getMenAesthetics, getWomenAesthetics } from "@/lib/aesthetics";
 import { getTrendingSection } from "@/lib/helper";
+import { AestheticsSection } from "./landing/aesthetic-section";
+
 
 export default async function Landing() {
   const session = await getServerSession();
   const res = await getTrendingSection();
   const trendingItems = res.data;
+  
+  // Fetch aesthetics data
+  const womenAesthetics = await getWomenAesthetics();
+  const menAesthetics = await getMenAesthetics();
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafafa]">
@@ -38,8 +44,24 @@ export default async function Landing() {
           </div>
           <SearchBar />
         </div>
-        <div className="mt-28">
+        <div className="mt-20">
           <TrendingSection trendingItems={trendingItems} />
+        </div>
+        
+        {/* Women's Aesthetics Section - Added First */}
+        <div className="mt-8">
+          <AestheticsSection 
+            title="Follow These Aesthetics for Women" 
+            aesthetics={womenAesthetics} 
+          />
+        </div>
+        
+        {/* Men's Aesthetics Section - Added Second */}
+        <div className="mt-4">
+          <AestheticsSection 
+            title="Follow These Aesthetics for Men" 
+            aesthetics={menAesthetics} 
+          />
         </div>
       </main>
     </div>
