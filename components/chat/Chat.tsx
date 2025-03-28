@@ -4,7 +4,7 @@ import { collection, orderBy, query } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useEffect, useRef } from "react";
-import Message from "./Message"; // Make sure this imports your newly created Message component
+import Message from "./MessageRenderer"; // Make sure this imports your newly created Message component
 import { ArrowDownIcon } from "@heroicons/react/24/outline";
 import { MessageSkeleton, ProductsSkeleton } from "../skeletons/chat";
 import ThinkingAnimation from "../ThinkingAnimation";
