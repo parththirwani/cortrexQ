@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { z } from 'zod';
-import { PrismaClient, Gender, AgeGroup, SizeCategory } from '@prisma/client';
+import { Gender, AgeGroup, SizeCategory } from '@prisma/client';
 import { authOptions } from '@/lib/auth';
+import prisma from "@/db";
 
-const prisma = new PrismaClient();
-
-// Input validation schema
 const OnboardingSchema = z.object({
   username: z.string().min(3).max(30).optional(),
   bio: z.string().max(500).optional(),
@@ -71,7 +69,7 @@ export async function POST(request: NextRequest) {
       }
 
       // 2. Update user profile information
-      const updatedUser = await tx.user.update({
+      await tx.user.update({
         where: { id: user.id },
         data: {
           username: data.username,
@@ -161,7 +159,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint to retrieve user's onboarding data
+
 export async function GET(request: NextRequest) {
   try {
     // Get the authenticated session

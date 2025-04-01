@@ -76,7 +76,8 @@ export function Header() {
                   <div>
                     <button
                       onClick={() => {
-                        signOut();
+                        signOut({redirect:true});
+                        router.push("/auth")
                       }}
                     >
                       LogOut
