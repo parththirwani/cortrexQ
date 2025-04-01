@@ -1,7 +1,7 @@
 import { Feed } from "@/components/feed/Feed";
 import { FeedHeader } from "@/components/feed/FeedHeader";
 import { FollowOptions } from "@/components/feed/FollowOptions";
-import { Separator } from "@/Components/ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { authOptions } from "@/lib/auth";
 import { getAllUsers, getUserFeed } from "@/lib/db";
 import { getServerSession } from "next-auth";

@@ -1,5 +1,6 @@
 
-import { Favorites } from "@/Components/profile/Favrouties";
+
+import { Favorites } from "@/components/profile/Favrouties";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { Input } from "@/components/ui/input";
 import { authOptions } from "@/lib/auth";

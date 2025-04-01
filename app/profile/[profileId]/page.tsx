@@ -1,8 +1,9 @@
-import { Favorites } from "@/Components/profile/Favrouties";
+import { Favorites } from "@/components/profile/Favrouties";
 import { SimpleProfileHeader } from "@/components/profile/SimpleProfileHeader";
 
 import { Input } from "@/components/ui/input";
 import { getUser } from "@/lib/db";
+import { IUser } from "@/types/user";
 
 export default async function ProfileId({
   params,
@@ -13,7 +14,7 @@ export default async function ProfileId({
 
   return (
     <div className="container mx-auto max-w-6xl px-4 pt-28">
-      <SimpleProfileHeader initialUser={user} />
+      <SimpleProfileHeader initialUser={user as IUser} />
       <div className="mb-8 flex flex-col gap-4 sm:flex-row">
         <div className="relative flex-1 px-5">
           <Input

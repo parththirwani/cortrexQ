@@ -83,11 +83,12 @@ export const ProfileHeader = ({ initialUser }: IProfileProps) => {
   };
 
   const handleShare = () => {
+    console.log(user)
     if (navigator.share) {
       navigator
         .share({
           title: user.name,
-          url: `${window.location.href}/${user.id}`,
+          url: `${window.location.href}/${user.id}?email=${user.email}`,
         })
         .catch((err) => console.error("Error sharing:", err));
     } else {

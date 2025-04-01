@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState, useMemo } from "react";
-
+import { useSearchParams } from 'next/navigation'
 interface FavoritesProps {
   userEmail: string;
 }
@@ -20,18 +20,23 @@ interface FavoritesProps {
 export const Favorites = ({ userEmail }: FavoritesProps) => {
   const { data: session } = useSession();
   const [sortOption, setSortOption] = useState("recent");
+  const searchParams = useSearchParams();
 
+  // Check if the link is of a shared profile or not
+  const email = searchParams.get('email');
+
+  console.log("email----",email)
   const [favItems, fetching, error] = useCollection(
-    session &&
       query(
         collection(
           db,
           "users",
-          userEmail ? userEmail : session?.user?.email!,
+          email ? email : userEmail || session?.user.email!,
           "likes"
         )
       )
   );
+
 
   const sortedItems = useMemo(() => {
     if (!favItems) return [];
