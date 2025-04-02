@@ -22,17 +22,17 @@ const ChatInput = ({ chatId, loading, setLoading }: Props) => {
     const input = prompt.trim();
     setPrompt("");
 
-    const message = {
-      text: input,
-      createdAt: serverTimestamp(),
-      user: {
-        _id: session?.user?.email!,
-        name: session?.user?.name!,
-        avatar:
-          session?.user?.image! ||
-          `https://ui-avatars.com/api/?name=${session?.user?.name}`,
-      },
-    };
+    // const message = {
+    //   text: input,
+    //   createdAt: serverTimestamp(),
+    //   user: {
+    //     _id: session?.user?.email!,
+    //     name: session?.user?.name!,
+    //     avatar:
+    //       session?.user?.image! ||
+    //       `https://ui-avatars.com/api/?name=${session?.user?.name}`,
+    //   },
+    // };
 
     const notification = toast.loading("Sending Message");
     await fetch("/api/askQuestion", {
@@ -47,9 +47,6 @@ const ChatInput = ({ chatId, loading, setLoading }: Props) => {
       }),
     }).then(() => {
       setLoading(false)
-      toast.success("Message Sent", {
-        id: notification,
-      });
     });
   };
 

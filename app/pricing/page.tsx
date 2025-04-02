@@ -1,7 +1,7 @@
-import ComingSoon from "@/components/ComingSoon";
+import PricingPage from "@/components/PricingPage";
 
 export default function Pricing(){
     return (
-        <ComingSoon/>
+        <PricingPage/>
     )
 } 

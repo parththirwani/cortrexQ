@@ -3,10 +3,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getFirestore, doc, getDoc, DocumentData } from "firebase/firestore";
 import { toast } from "sonner";
-
-// Components
-
-// Types
 import { 
   SortOption, 
   ViewOption, 
@@ -43,8 +39,6 @@ const MessageMarkdownRenderer = ({
   const [sortedProducts, setSortedProducts] = useState<Product[]>([]);
   const [sortedOriginalProducts, setSortedOriginalProducts] = useState<Product[]>([]);
   const [likedProducts, setLikedProducts] = useState<string[]>([]);
-
-  const router = useRouter();
 
   const loadMore = useCallback(() => {
     setDisplayCount((prevCount) => prevCount + 8);
@@ -94,18 +88,20 @@ const MessageMarkdownRenderer = ({
   const sortProductsByPrice = (products: Product[], sortOption: SortOption) => {
     const parsePrice = (priceStr: string | undefined) => {
       if (!priceStr) return 0;
-      const numericPrice = parseFloat(priceStr.replace(/[$,£€]/g, ""));
+      const numericPrice = parseFloat(priceStr.replace(/[$,£€₹]/g, ""));
       return isNaN(numericPrice) ? 0 : numericPrice;
     };
 
+    // First put all the initial products in a single array 
     const sortedProducts = [...products];
-    
+
+    // Then modify that array based on the choice of the user
     if (sortOption === "low-to-high") {
       sortedProducts.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
     } else if (sortOption === "high-to-low") {
       sortedProducts.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
     }
-    
+
     return sortedProducts;
   };
 
@@ -217,7 +213,7 @@ const MessageMarkdownRenderer = ({
             ) : (
               // Regular product grid (default view)
               <ProductGrid
-                products={hasRerankedProducts ? sortedProducts : sortedOriginalProducts}
+                products={ sortedProducts }
                 displayCount={displayCount}
                 onLoadMore={loadMore}
                 likedProducts={likedProducts}

@@ -6,7 +6,9 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { generatePrompt, generateQueryPrompt } from "@/app/prompts";
 import { incrementRequestCount } from "@/lib/db";
 import { rerankResults } from "@/lib/reranker";
- 
+import { canUserQuery } from "@/lib/credentialCheck";
+import prisma from "@/db";
+
 const { getJson } = require("serpapi");
 
 type Message = {
@@ -21,12 +23,11 @@ type Message = {
   };
 };
 
-// Default location settings if user data isn't available
 const defaultLocation = {
   country: "India",
   countryCode: "IN",
   googleDomain: "google.co.in",
-  currency: "INR"
+  currency: "INR",
 };
 
 const client = new GoogleGenerativeAI(process.env.GEMINI_API || "");
@@ -34,7 +35,6 @@ const model = client.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const MAX_CONTEXT_MESSAGES = 10;
 
-// Updated POST handler for /api/askQuestion
 export async function POST(request: Request, res: NextApiResponse) {
   try {
     const { prompt, chatId, session } = await request.json();
@@ -49,12 +49,20 @@ export async function POST(request: Request, res: NextApiResponse) {
       },
     };
 
+    const canQuery = await canUserQuery(session.user.id);
+
+    if (!canQuery) {
+      return NextResponse.json(
+        { error: "No More credits left" },
+        { status: 401 }
+      );
+    }
     // Get user location data from session or use defaults
     const location = {
       country: session.user.country || defaultLocation.country,
       countryCode: session.user.countryCode || defaultLocation.countryCode,
       googleDomain: session.user.googleDomain || defaultLocation.googleDomain,
-      currency: session.user.currency || defaultLocation.currency
+      currency: session.user.currency || defaultLocation.currency,
     };
 
     const messagesRef = adminDB
@@ -85,12 +93,14 @@ export async function POST(request: Request, res: NextApiResponse) {
     const searchPromise: Promise<any[]> = new Promise((resolve, reject) => {
       getJson(
         {
+          // engine: "google_shopping",
           engine: "google_shopping",
           q: optimizedQuery,
           location: location.country,
           google_domain: location.googleDomain,
+          device: "desktop",
           gl: location.countryCode.toLowerCase(),
-          hl: "en",                      // Language setting (English)
+          hl: "en", // Language setting (English)
           currency: location.currency,
           api_key: process.env.SERP_API,
         },
@@ -103,17 +113,17 @@ export async function POST(request: Request, res: NextApiResponse) {
         }
       );
     });
-    
+
     // Store the original results before reranking
     let originalResults = await searchPromise;
-    
+
     // Step 3: Re-Rank the Results using Metadata
     let rerankedResults = await rerankResults([...originalResults], prompt);
 
     // Step 4: Generate Final LLM Response with country-specific context
     const llmPrompt = generatePrompt(
-      prompt, 
-      rerankedResults, 
+      prompt,
+      rerankedResults,
       previousMessages,
       location // Pass location to prompt generator
     );
@@ -137,12 +147,23 @@ export async function POST(request: Request, res: NextApiResponse) {
     await messagesRef.add(message);
     await incrementRequestCount(session.user.id);
 
+    await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        messageCount: {
+          decrement: 1,
+        },
+      },
+    });
+
     return NextResponse.json({
       answer: message.text as string,
       searchQuery: optimizedQuery,
       originalProducts: originalResults,
       rerankedProducts: rerankedResults,
-      userLocation: location // Return location data for debugging/display
+      userLocation: location, // Return location data for debugging/display
     });
   } catch (e) {
     console.error("Error in askQuestion:", e);

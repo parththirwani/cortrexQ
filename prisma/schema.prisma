@@ -23,6 +23,7 @@ model User {
   instagramId        String?
   gender             Gender?
   ageGroup           AgeGroup?
+  messageCount       Int       @default(3)
   bio                String?   @db.Text
   country            String?   @default("India")
   countryCode        String?   @default("IN")
@@ -31,6 +32,7 @@ model User {
   isPublic           Boolean   @default(true)
   requestCount       Int       @default(0)
   isPremium          Boolean   @default(false)
+  subscriptionExpiry DateTime? 
   accounts           Account[]
   sessions           Session[]
   createdAt          DateTime  @default(now())
@@ -43,7 +45,28 @@ model User {
   // Style preferences
   aesthetics         UserAesthetic[]
   sizes              UserSize[]
+  payments           Payment[]
   hasCompletedOnboarding Boolean @default(false)
+}
+
+
+model Payment {
+  id               String   @id @default(uuid())
+  userId           String  
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  razorpayPaymentId String? @unique
+  razorpayOrderId   String  @unique
+  amount           Int
+  currency         String  @default("INR")
+  status          String  @default("pending") 
+  createdAt       DateTime @default(now())
+}
+
+
+enum PaymentStatus {
+  pending
+  captured
+  failed
 }
 
 
