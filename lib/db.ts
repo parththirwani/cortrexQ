@@ -45,7 +45,7 @@ export async function getUserFeed(userId: string) {
         likedProducts.push({
           ...data,
           id: doc.id,
-        });
+        } as TLikedProduct & { id: string }) ;
       });
 
       if (likedProducts.length > 0) {

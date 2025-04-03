@@ -11,12 +11,12 @@ export default function PurchaseButton() {
 
   const handlePayment = async () => {
     setIsLoading(true);
-    const price = 100; // Replace with dynamic price
+    const price = "100"; // Replace with dynamic price
     try {
-      const orderId: string = await createOrderId(price, "INR");
+      const orderId: string = await createOrderId(price);
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: price * 100,
+        amount: parseFloat(price) * 100,
         currency: "INR",
         name: "CortexQ", // Replace with dynamic company name
         description: "Payment for your order", // Replace with dynamic order description

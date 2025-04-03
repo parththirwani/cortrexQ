@@ -222,7 +222,7 @@ function ProfileStep({ formData, handleInputChange }: StepProps) {
         Tell us about yourself
       </h3>
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        Let's set up your profile. You can always change this later.
+        Let&apos;s set up your profile. You can always change this later.
       </p>
 
       <div className="space-y-4 mt-6">
@@ -268,7 +268,7 @@ function GenderStep({ formData, handleInputChange }: StepProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-bold text-gray-800 dark:text-white">
-        What's your gender?
+        What&apos;s your gender?
       </h3>
       <p className="text-sm text-gray-500 dark:text-gray-400">
         This helps us personalize your style recommendations.
@@ -309,7 +309,7 @@ function AgeGroupStep({ formData, handleInputChange }: StepProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-bold text-gray-800 dark:text-white">
-        What's your age group?
+        What&apos;s your age group?
       </h3>
       <p className="text-sm text-gray-500 dark:text-gray-400">
         This helps us tailor style recommendations to your life stage.

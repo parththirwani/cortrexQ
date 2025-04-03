@@ -19,10 +19,10 @@ export default function PricingPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-black sm:text-4xl">
-            Simple, transparent pricing
+            Simple&apos; transparent pricing
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-            Choose the plan that's right for you or your business
+            Choose the plan that&apos;s right for you or your business
           </p>
         </div>
         <div className="mt-16 grid gap-8 md:grid-cols-3">
